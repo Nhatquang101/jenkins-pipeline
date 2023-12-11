@@ -1,0 +1,42 @@
+pipeline {
+
+    agent any
+    
+    environment {
+        COMPOSE_PROJECT_NAME = 'app' 
+    }
+    
+    stages {
+
+        stage('Build') {
+            steps {
+                sh 'sudo docker-compose build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'sudo docker-compose run web pip show flask'
+                sh 'sudo docker-compose run redis redis-server --version'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'sudo docker-compose down'
+                sh 'sudo docker-compose up -d'
+            }
+        }
+        
+    }
+
+    post {
+        success {
+            echo 'Pipeline succeeded! Docker Compose stack deployed.'
+        }
+        failure {
+            echo 'Pipeline failed! Deployment unsuccessful.'
+        }
+    }
+
+}
