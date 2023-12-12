@@ -10,21 +10,21 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'sudo docker-compose build'
+                sh 'sudo docker-compose -f /home/jenkins/demo/jenkins-pipeline/docker-compose.yml build'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'sudo docker-compose run web pip show flask'
-                sh 'sudo docker-compose run redis redis-server --version'
+                sh 'sudo docker-compose -f /home/jenkins/demo/jenkins-pipeline/docker-compose.yml run web pip show flask'
+                sh 'sudo docker-compose -f /home/jenkins/demo/jenkins-pipeline/docker-compose.yml run redis redis-server --version'
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'sudo docker-compose down'
-                sh 'sudo docker-compose up -d'
+                sh 'sudo docker-compose -f /home/jenkins/demo/jenkins-pipeline/docker-compose.yml down'
+                sh 'sudo docker-compose -f /home/jenkins/demo/jenkins-pipeline/docker-compose.yml up -d'
             }
         }
         
